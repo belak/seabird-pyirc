@@ -1,0 +1,10 @@
+args = {
+    'serverport': ('chat.freenode.net', 6697),
+    'ssl': True,
+    'username': 'herbert',
+    'nick': 'i-am-a-bot',
+    'gecos': 'Test Bot',
+    'sasl_username': 'herbert-bot',
+    'sasl_password': 'asdasdasdasd',
+    'autojoins': ['#botters-test-junk'],
+}
