@@ -6,6 +6,6 @@ class RandomPlugin(BaseExtension):
     def say_hi(self, _, line):
         basic_rfc = self.base.basic_rfc
         if self.casecmp(line.hostmask.nick, basic_rfc.nick):
-            self.base.send('PRIVMSG', [line.params[0], 'Hi!'])
+            self.base.reply(line, 'Hi!')
         else:
-            self.base.send('PRIVMSG', [line.params[0], 'Hi %s!' % line.hostmask.nick])
+            self.base.reply(line, 'Hi %s!' % line.hostmask.nick)

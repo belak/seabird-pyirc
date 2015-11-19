@@ -22,3 +22,18 @@ class SeabirdProtocol(IRCProtocol, PrettyPrintedIRCMixin):
 
         super().__init__(**kwargs)
 
+    def reply(self, line, msg):
+        # If the first param isn't the bot's nick, we should send it back to
+        # the first param, as that will be the channel name.
+        target = line.hostmask.nick
+        if self.casecmp(self.basic_rfc.nick, line.params[0]):
+            target = line.params[0]
+
+        self.send('PRIVMSG', [target, msg])
+
+    def mention_reply(self, line, msg):
+        if not self.casecmp(self.basic_rfc.nick, line.params[0]):
+            msg = '%s: %s' % (line.hostmask.nick, msg)
+
+        self.reply(line, msg)
+

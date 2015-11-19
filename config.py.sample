@@ -6,5 +6,5 @@ args = {
     'gecos': 'Test Bot',
     'sasl_username': 'herbert-bot',
     'sasl_password': 'asdasdasdasd',
-    'autojoins': ['#botters-test-junk'],
+    'join': ['#botters-test-junk'],
 }
