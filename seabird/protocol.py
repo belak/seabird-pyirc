@@ -26,7 +26,7 @@ class SeabirdProtocol(IRCProtocol, PrettyPrintedIRCMixin):
         # If the first param isn't the bot's nick, we should send it back to
         # the first param, as that will be the channel name.
         target = line.hostmask.nick
-        if self.casecmp(self.basic_rfc.nick, line.params[0]):
+        if not self.casecmp(self.basic_rfc.nick, line.params[0]):
             target = line.params[0]
 
         self.send('PRIVMSG', [target, msg])
