@@ -4,6 +4,7 @@ from PyIRC.io.asyncio import IRCProtocol
 
 # We need to make sure all plugins are imported so PyIRC can find all
 # subclasses of BaseExtension.
+from .command import CommandMux
 from .random import RandomPlugin
 
 from config import args
