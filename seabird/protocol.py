@@ -1,11 +1,12 @@
 from PyIRC.extensions import bot_recommended
-from PyIRC.formatting.pprint import PrettyPrintedIRCMixin 
+from PyIRC.formatting.pprint import PrettyPrintedIRCMixin
 from PyIRC.io.asyncio import IRCProtocol
 
 # We need to make sure all plugins are imported so PyIRC can find all
 # subclasses of BaseExtension.
 from .command import CommandMux
 from .random import RandomPlugin
+from .fcc import FccPlugin
 
 from config import args
 
@@ -15,7 +16,8 @@ class SeabirdProtocol(IRCProtocol, PrettyPrintedIRCMixin):
         # Update extensions to ensure we have bot_recommended and maybe add all
         # the seabird plugins if none are defined.
         extensions = kwargs.get('extensions', [
-            'RandomPlugin'
+            'RandomPlugin',
+            'FccPlugin',
         ])
 
         extensions = bot_recommended + extensions
