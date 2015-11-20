@@ -3,12 +3,17 @@ from PyIRC.formatting.pprint import PrettyPrintedIRCMixin
 from PyIRC.io.asyncio import IRCProtocol
 from PyIRC.util.classutil import get_all_subclasses
 
-# We need to make sure all plugins are imported so PyIRC can find all
-# subclasses of BaseExtension.
+# NOTE: All modules that are valid in the extensions config value need to be
+# imported so they can be found by the get_all_subclasses method.
+
+# Helper extensions
+from .db import Database
 from .command import CommandMux
-from .random import RandomPlugin
+
+# Plugins
 from .fcc import FccPlugin
 from .metar import MetarPlugin
+from .random import RandomPlugin
 
 from config import args
 
