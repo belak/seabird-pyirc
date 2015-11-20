@@ -8,6 +8,7 @@ from PyIRC.util.classutil import get_all_subclasses
 from .command import CommandMux
 from .random import RandomPlugin
 from .fcc import FccPlugin
+from .metar import MetarPlugin
 
 from config import args
 
