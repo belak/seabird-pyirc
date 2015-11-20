@@ -15,7 +15,7 @@ class Database(BaseExtension):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.db_engine = create_engine(kwargs.pop('db_uri', 'sqlite://seabird.db'))
+        self.db_engine = create_engine(kwargs.pop('db_uri', 'sqlite:///seabird.db'))
         self.db_sessionmaker = sessionmaker(bind=self.db_engine)
 
         # Monkey patch the db_session method onto the bot object because people are lazy.
