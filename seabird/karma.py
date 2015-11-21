@@ -23,11 +23,7 @@ class KarmaPlugin(BaseExtension):
             for (item, operation) in self.regex.findall(trailing):
                 normalized_item = item.lower()
 
-                k = session.query(Karma).get(normalized_item)
-                if not k:
-                    k = Karma(name=normalized_item, score=0)
-                    session.add(k)
-                    session.flush()
+                k, _ = session.get_or_create(Karma, name=normalized_item)
 
                 # Figure out if we need to add or subtract
                 diff = -1
