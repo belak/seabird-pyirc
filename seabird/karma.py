@@ -6,6 +6,7 @@ from .db import Base
 
 import re
 
+
 class Karma(Base):
     __tablename__ = 'karma'
 
@@ -14,7 +15,21 @@ class Karma(Base):
 
 
 class KarmaPlugin(BaseExtension):
+    requires = ['Database']
+
     regex = re.compile('([^\s]+)(\+\+|--)(?:\s|$)')
+
+    @event('seabird_command', 'karma')
+    def karma(self, event, line, cmd, remainder):
+        normalized_item = remainder.lower()
+        with self.base.db_session() as session:
+            score = Karma.score.default
+
+            k = session.query(Karma).get(normalized_item)
+            if k:
+                score = k.score
+
+            self.reply(line, "%s's karma is now %d" % (remainder, score))
 
     @event('commands', 'PRIVMSG')
     def match_karma(self, event, line):
