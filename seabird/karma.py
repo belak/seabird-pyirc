@@ -27,7 +27,7 @@ class KarmaPlugin(BaseExtension):
                 if not k:
                     k = Karma(name=normalized_item, score=0)
                     session.add(k)
-                    session.commit()
+                    session.flush()
 
                 # Figure out if we need to add or subtract
                 diff = -1
@@ -37,7 +37,7 @@ class KarmaPlugin(BaseExtension):
                 # Update the model
                 k.score = Karma.score + diff
                 session.add(k)
-                session.commit()
+                session.flush()
 
                 k = session.query(Karma).get(normalized_item)
                 self.reply(line, "%s's karma is now %d" % (item, k.score))
