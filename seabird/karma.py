@@ -23,13 +23,13 @@ class KarmaPlugin(BaseExtension):
     def karma(self, event, line, cmd, remainder):
         normalized_item = remainder.lower()
         with self.base.db_session() as session:
-            score = Karma.score.default
+            score = Karma.score.default.arg
 
             k = session.query(Karma).get(normalized_item)
             if k:
                 score = k.score
 
-            self.reply(line, "%s's karma is now %d" % (remainder, score))
+            self.reply(line, "%s's karma is %d" % (remainder, score))
 
     @event('commands', 'PRIVMSG')
     def match_karma(self, event, line):
