@@ -56,10 +56,14 @@ dictConfig({
 from seabird.db import Base
 target_metadata = Base.metadata
 
+# Import a few extra things to ensure we have all the models imported
+import seabird
+import seabird.protocol
+
 # Get the config module
 # TODO: Make sure the default is only in one place.
 import config
-db_uri = config.args.get('db_uri', 'sqlite:///seabird.db')
+db_uri = config.args.get('db_uri', 'sqlite:///bot.db')
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.

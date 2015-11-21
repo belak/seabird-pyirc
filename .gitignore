@@ -57,5 +57,5 @@ docs/_build/
 target/
 
 # Custom stuff
+*.db
 config.py
-seabird.db

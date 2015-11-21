@@ -12,6 +12,7 @@ from .command import CommandMux
 
 # Plugins
 from .fcc import FccPlugin
+from .karma import KarmaPlugin
 from .metar import MetarPlugin
 from .random import RandomPlugin
 
