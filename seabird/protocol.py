@@ -16,6 +16,7 @@ from .fcc import FccPlugin
 from .karma import KarmaPlugin
 from .metar import MetarPlugin
 from .random import RandomPlugin
+from .weather import WeatherPlugin
 
 from config import args
 

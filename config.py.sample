@@ -7,4 +7,7 @@ args = {
     'sasl_username': 'herbert-bot',
     'sasl_password': 'asdasdasdasd',
     'join': ['#botters-test-junk'],
+    'weather': {
+        'api_key': 'my-awesome-api-key',
+    },
 }
