@@ -10,7 +10,7 @@ class MetarPlugin(BaseExtension):
     requires = ['CommandMux']
 
     @event('seabird_command', 'metar')
-    def search_fcc(self, event, line, cmd, remainder):
+    def get_metar(self, event, line, cmd, remainder):
         try:
             resp = requests.get(METAR_URL.format(remainder.upper()))
         except:
