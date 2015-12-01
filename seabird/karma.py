@@ -33,6 +33,7 @@ class KarmaPlugin(BaseExtension):
 
     @event('commands', 'PRIVMSG')
     def match_karma(self, event, line):
+        basic_rfc = self.base.basic_rfc
         if not self.casecmp(line.hostmask.nick, basic_rfc.nick):
             self.reply(line, 'Must be used in a channel')
             return
