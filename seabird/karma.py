@@ -33,28 +33,28 @@ class KarmaPlugin(BaseExtension):
 
     @event('commands', 'PRIVMSG')
     def match_karma(self, event, line):
-        # TODO(belak): make this so it doesn't erroneously print all the time
-        # basic_rfc = self.base.basic_rfc
-        # if not self.casecmp(line.hostmask.nick, basic_rfc.nick):
-            # self.reply(line, 'Must be used in a channel')
-            # return
-
         trailing = line.params[-1]
-        with self.base.db_session() as session:
-            for (item, operation) in self.regex.findall(trailing):
-                normalized_item = item.lower()
+        if self.regex.match(trailing):
+            basic_rfc = self.base.basic_rfc
+            if self.casecmp(line.params[0], basic_rfc.nick):
+                self.reply(line, 'Must be used in a channel')
+                return
 
-                k, _ = session.get_or_create(Karma, name=normalized_item)
+            with self.base.db_session() as session:
+                for (item, operation) in self.regex.findall(trailing):
+                    normalized_item = item.lower()
 
-                # Figure out if we need to add or subtract
-                diff = -1
-                if operation == '++':
-                    diff = 1
+                    k, _ = session.get_or_create(Karma, name=normalized_item)
 
-                # Update the model
-                k.score = Karma.score + diff
-                session.add(k)
-                session.flush()
+                    # Figure out if we need to add or subtract
+                    diff = -1
+                    if operation == '++':
+                        diff = 1
 
-                k = session.query(Karma).get(normalized_item)
-                self.reply(line, "%s's karma is now %d" % (item, k.score))
+                    # Update the model
+                    k.score = Karma.score + diff
+                    session.add(k)
+                    session.flush()
+
+                    k = session.query(Karma).get(normalized_item)
+                    self.reply(line, "%s's karma is now %d" % (item, k.score))

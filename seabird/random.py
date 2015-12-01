@@ -30,7 +30,7 @@ class RandomPlugin(BaseExtension):
     @event('seabird_command', 'coin')
     def coin(self, event, line, cmd, remainder):
         basic_rfc = self.base.basic_rfc
-        if not self.casecmp(line.hostmask.nick, basic_rfc.nick):
+        if not self.casecmp(line.params[0], basic_rfc.nick):
             self.reply(line, 'Must be used in a channel')
             return
 
@@ -45,7 +45,7 @@ class RandomPlugin(BaseExtension):
     @event('seabird_command', 'roulette')
     def roulette(self, event, line, cmd, remainder):
         basic_rfc = self.base.basic_rfc
-        if not self.casecmp(line.hostmask.nick, basic_rfc.nick):
+        if not self.casecmp(line.params[0], basic_rfc.nick):
             self.reply(line, 'Must be used in a channel')
             return
 
