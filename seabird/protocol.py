@@ -15,6 +15,7 @@ from .dice import DicePlugin
 from .fcc import FccPlugin
 from .karma import KarmaPlugin
 from .metar import MetarPlugin
+from .net_tools import NetToolsPlugin
 from .random import RandomPlugin
 from .weather import WeatherPlugin
 
