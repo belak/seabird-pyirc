@@ -2,7 +2,7 @@ from PyIRC.extensions import BaseExtension
 from PyIRC.signal import event
 from sqlalchemy import Column, Integer, String
 
-from .db import Base
+from seabird.db import Base
 
 import re
 

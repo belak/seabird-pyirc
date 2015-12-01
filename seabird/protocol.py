@@ -10,27 +10,27 @@ from PyIRC.util.classutil import get_all_subclasses
 from .db import Database
 from .command import CommandMux
 
-# Plugins
-from .dice import DicePlugin
-from .fcc import FccPlugin
-from .karma import KarmaPlugin
-from .metar import MetarPlugin
-from .net_tools import NetToolsPlugin
-from .random import RandomPlugin
-from .weather import WeatherPlugin
+from . import plugins
 
 from config import args
+
+from pkgutil import iter_modules
 
 
 class SeabirdProtocol(IRCProtocol, PrettyPrintedIRCMixin):
     def __init__(self, **kwargs):
+        # Iterate over all packages in the plugins submodule so
+        # get_all_subclasses can find all the plugins in there.
+        for _, name, _ in iter_modules(plugins.__path__, 'seabird.plugins.'):
+            __import__(name)
+
         # Update extensions to ensure we have bot_recommended and maybe add all
         # the seabird plugins if none are defined.
         extensions = kwargs.get('extensions')
         if not extensions:
             extensions = []
             for cls in get_all_subclasses(BaseExtension):
-                if not cls.__module__.startswith('seabird.'):
+                if not cls.__module__.startswith('seabird.plugins.'):
                     continue
 
                 extensions.append(cls.__name__)
