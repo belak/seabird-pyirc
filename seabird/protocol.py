@@ -11,6 +11,7 @@ from .db import Database
 from .command import CommandMux
 
 # Plugins
+from .dice import DicePlugin
 from .fcc import FccPlugin
 from .karma import KarmaPlugin
 from .metar import MetarPlugin
