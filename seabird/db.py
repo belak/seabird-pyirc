@@ -10,7 +10,7 @@ from contextlib import contextmanager
 
 # This should be the base for all models in seabird, so migrations can be
 # auto-generated.
-Base = declarative_base()
+Base = declarative_base()  # pylint:disable=invalid-name
 
 
 class SeabirdSession(Session):

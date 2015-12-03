@@ -13,9 +13,6 @@ class SeabirdCommand(SeabirdMessage):
         self.cmd, _, self.remainder = result
 
 
-# TODO: This is a temporary class which will just emit an sb.command event
-# for each event that comes in. This should be expanded to include support for
-# !help and other such conveniences.
 class CommandMux(BaseExtension):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

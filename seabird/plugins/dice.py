@@ -1,15 +1,15 @@
-from PyIRC.extensions import BaseExtension
-from PyIRC.signal import event
-
 from random import randint
 import re
+
+from PyIRC.extensions import BaseExtension
+from PyIRC.signal import event
 
 
 class DicePlugin(BaseExtension):
     requires = ['CommandMux']
 
     @event('commands', 'PRIVMSG')
-    def roll_dice(self, event, line):
+    def roll_dice(self, _, line):
         """Looks for strings like "3d6" in strings to roll
         As it looks in every string, it doesn't notify users on
         error.
@@ -25,6 +25,6 @@ class DicePlugin(BaseExtension):
                 pass
 
             rolls = ['{}d{}:'.format(num_dice, dice_magnitude)]
-            for i in range(num_dice):
+            for _ in range(num_dice):
                 rolls.append(str(randint(1, dice_magnitude)))
             self.base.mention_reply(line, ' '.join(rolls))

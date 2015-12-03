@@ -1,10 +1,10 @@
+import re
+
 from PyIRC.extensions import BaseExtension
 from PyIRC.signal import event
 from sqlalchemy import Column, Integer, String
 
 from seabird.db import Base
-
-import re
 
 
 class Karma(Base):
@@ -17,10 +17,10 @@ class Karma(Base):
 class KarmaPlugin(BaseExtension):
     requires = ['Database']
 
-    regex = re.compile('([^\s]+)(\+\+|--)(?:\s|$)')
+    regex = re.compile(r'([^\s]+)(\+\+|--)(?:\s|$)')
 
     @event('sb.command', 'karma')
-    def karma(self, event, cmd):
+    def karma(self, _, cmd):
         normalized_item = cmd.remainder.lower()
         with self.base.db_session() as session:
             score = Karma.score.default.arg
@@ -32,7 +32,7 @@ class KarmaPlugin(BaseExtension):
             cmd.reply("%s's karma is %d" % (cmd.remainder, score))
 
     @event('commands', 'PRIVMSG')
-    def match_karma(self, event, line):
+    def match_karma(self, _, line):
         trailing = line.params[-1]
         if self.regex.match(trailing):
             basic_rfc = self.base.basic_rfc
