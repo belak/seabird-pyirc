@@ -29,7 +29,7 @@ class KarmaPlugin(BaseExtension):
             if k:
                 score = k.score
 
-            cmd.reply("%s's karma is %d" % (remainder, score))
+            cmd.reply("%s's karma is %d" % (cmd.remainder, score))
 
     @event('commands', 'PRIVMSG')
     def match_karma(self, event, line):

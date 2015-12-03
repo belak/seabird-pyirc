@@ -4,6 +4,7 @@ from PyIRC.signal import event
 from random import randint
 import re
 
+
 class DicePlugin(BaseExtension):
     requires = ['CommandMux']
 

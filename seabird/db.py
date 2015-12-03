@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound, IntegrityError
 from sqlalchemy.orm.session import Session
 
 from PyIRC.extensions import BaseExtension
@@ -33,10 +33,13 @@ class Database(BaseExtension):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.db_engine = create_engine(kwargs.pop('db_uri', 'sqlite:///bot.db'))
-        self.db_sessionmaker = sessionmaker(bind=self.db_engine, class_=SeabirdSession)
+        self.db_engine = create_engine(kwargs.pop('db_uri',
+                                                  'sqlite:///bot.db'))
+        self.db_sessionmaker = sessionmaker(bind=self.db_engine,
+                                            class_=SeabirdSession)
 
-        # Monkey patch the db_session method onto the bot object because people are lazy.
+        # Monkey patch the db_session method onto the bot object because people
+        # are lazy.
         self.base.db_session = self.db_session
 
     @contextmanager
@@ -57,4 +60,3 @@ class Database(BaseExtension):
             raise
         finally:
             session.close()
-

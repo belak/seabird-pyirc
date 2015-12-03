@@ -4,6 +4,7 @@ from PyIRC.signal import event
 
 from random import randint, choice
 
+
 class RandomPlugin(BaseExtension):
     requires = ['CommandMux']
 
@@ -33,14 +34,17 @@ class RandomPlugin(BaseExtension):
             cmd.reply('Must be used in a channel')
             return
 
-        if not cmd.remainder in self.coin_names:
-            self.basicapi.kick(cmd.reply_target, cmd.who, reason="That's not a valid coin side! Options are: %s" % ', '.join(self.coin_names))
+        if cmd.remainder not in self.coin_names:
+            msg = "That's not a valid coin side! Options are: {}".format(
+                ', '.join(self.coin_names))
+            self.basicapi.kick(cmd.reply_target, cmd.who, reason=msg)
             return
 
         if cmd.remainder == choice(self.coin_names):
-            self.reply(line, 'Lucky guess!')
+            cmd.reply('Lucky guess!')
         else:
-            self.basicapi.kick(cmd.reply_target, cmd.who, reason='Sorry! Better luck next time!')
+            self.basicapi.kick(cmd.reply_target, cmd.who,
+                               reason='Sorry! Better luck next time!')
 
     @event('sb.command', 'roulette')
     def roulette(self, event, line, cmd, remainder):
@@ -56,7 +60,8 @@ class RandomPlugin(BaseExtension):
         shots_left -= 1
         if shots_left < 1:
             cmd.reply('BANG!')
-            self.base.basicapi.kick(cmd.reply_target, cmd.who, reason='Tough luck, kid')
+            self.base.basicapi.kick(cmd.reply_target, cmd.who,
+                                    reason='Tough luck, kid')
         else:
             cmd.reply('Click.')
 

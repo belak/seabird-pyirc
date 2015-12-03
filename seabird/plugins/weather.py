@@ -7,6 +7,7 @@ from config import args
 
 WEATHER_URL = 'http://api.openweathermap.org/data/2.5/weather'
 
+
 class WeatherPlugin(BaseExtension):
     requires = ['CommandMux']
 
@@ -21,30 +22,34 @@ class WeatherPlugin(BaseExtension):
                 'APPID': args['weather']['api_key'],
             })
         except:
-            cmd.mention_reply('Unable to get weather for {}'.format(cmd.remainder))
+            cmd.mention_reply('Unable to get weather for {}'.format(
+                cmd.remainder))
             return
 
         if resp.status_code != 200:
-            cmd.mention_reply('{} is not a valid zipcode'.format(cmd.remainder))
+            cmd.mention_reply('{} is not a valid zipcode'.format(
+                cmd.remainder))
             return
 
         try:
             data = resp.json()
 
-            # Once again, I am terribly lazy
-            desc = ''
+            format_args = {
+                'name':     data['name'],
+                'temp':     self._kelvinToFahrenheit(data['main']['temp']),
+                'temp_max': self._kelvinToFahrenheit(data['main']['temp_max']),
+                'temp_min': self._kelvinToFahrenheit(data['main']['temp_min']),
+                'desc':     '',
+            }
+
             try:
-                desc = '. {}'.format(data['weather'][0]['description'])
+                format_args['desc'] = '. {}'.format(
+                    data['weather'][0]['description'])
             except:
-                # No description here
                 pass
 
-            cmd.mention_reply('{}: {:.2f} with a high of {:.2f} '
-                'and low of {:.2f}{}.'.format(
-                    data['name'],
-                    self._kelvinToFahrenheit(data['main']['temp']),
-                    self._kelvinToFahrenheit(data['main']['temp_max']),
-                    self._kelvinToFahrenheit(data['main']['temp_min']),
-                    desc))
+            cmd.mention_reply('{name}: {temp:.2f} with a high of '
+                              '{temp_max:.2f} and low of '
+                              '{temp_min:.2f}{desc}.'.format(**format_args))
         except:
             cmd.mention_reply('Got malformed weather response')

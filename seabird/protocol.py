@@ -6,13 +6,13 @@ from PyIRC.util.classutil import get_all_subclasses
 # NOTE: All modules that are valid in the extensions config value need to be
 # imported so they can be found by the get_all_subclasses method.
 
-# Helper extensions
-from .db import Database
-from .command import CommandMux
+# Helper extensions. These need to be imported here because they're a part of
+# core, but still need to find them with get_all_subclasses. They have noqa on
+# them because we don't actually use them in this file.
+from .db import Database         # noqa
+from .command import CommandMux  # noqa
 
 from . import plugins
-
-from config import args
 
 from pkgutil import iter_modules
 
@@ -54,4 +54,3 @@ class SeabirdProtocol(IRCProtocol, PrettyPrintedIRCMixin):
             msg = '%s: %s' % (line.hostmask.nick, msg)
 
         self.reply(line, msg)
-

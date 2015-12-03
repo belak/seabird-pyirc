@@ -5,6 +5,7 @@ import requests
 
 FCC_URL = 'http://data.fcc.gov/api/license-view/basicSearch/getLicenses'
 
+
 class FccPlugin(BaseExtension):
     requires = ['CommandMux']
 
@@ -22,7 +23,8 @@ class FccPlugin(BaseExtension):
         try:
             license = data['Licenses']['License'][0]
             cmd.mention_reply('{} ({}): {}, {}, expires {}'.format(
-                license['callsign'], license['serviceDesc'], license['licName'],
-                license['statusDesc'], license['expiredDate']))
+                license['callsign'], license['serviceDesc'],
+                license['licName'], license['statusDesc'],
+                license['expiredDate']))
         except KeyError:
             cmd.mention_reply('Unable to get FCC callsigns')

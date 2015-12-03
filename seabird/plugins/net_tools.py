@@ -1,9 +1,9 @@
 from PyIRC.extensions import BaseExtension
 from PyIRC.signal import event
 
-import requests
 import socket
 import subprocess
+
 
 class NetToolsPlugin(BaseExtension):
     requires = ['CommandMux']
@@ -51,4 +51,4 @@ class NetToolsPlugin(BaseExtension):
             ).stdout.read()
             cmd.mention_reply(out.decode('ascii').split('\n')[1])
         except:
-            cmd.mention_reply('Error pinging {}'.format(remainder))
+            cmd.mention_reply('Error pinging {}'.format(cmd.remainder))
