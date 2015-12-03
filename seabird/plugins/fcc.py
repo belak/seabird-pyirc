@@ -5,24 +5,28 @@ import requests
 
 FCC_URL = 'http://data.fcc.gov/api/license-view/basicSearch/getLicenses'
 
+
 class FccPlugin(BaseExtension):
     requires = ['CommandMux']
 
     @event('sb.command', 'call')
-    def search_fcc(self, event, cmd):
+    def search_fcc(self, _, cmd):
         try:
-            data = requests.get(FCC_URL, params={
+            resp = requests.get(FCC_URL, params={
                 'format': 'json',
                 'searchValue': cmd.remainder,
-            }).json()
-        except:
+            })
+            resp.raise_for_status()
+            data = resp.json()
+        except (requests.RequestException, ValueError):
             cmd.mention_reply('Unable to get FCC callsigns')
             return
 
         try:
-            license = data['Licenses']['License'][0]
+            license_data = data['Licenses']['License'][0]
             cmd.mention_reply('{} ({}): {}, {}, expires {}'.format(
-                license['callsign'], license['serviceDesc'], license['licName'],
-                license['statusDesc'], license['expiredDate']))
+                license_data['callsign'], license_data['serviceDesc'],
+                license_data['licName'], license_data['statusDesc'],
+                license_data['expiredDate']))
         except KeyError:
             cmd.mention_reply('Unable to get FCC callsigns')

@@ -1,3 +1,6 @@
+# pylint: disable=abstract-method
+from pkgutil import iter_modules
+
 from PyIRC.extensions import bot_recommended, BaseExtension
 from PyIRC.formatting.pprint import PrettyPrintedIRCMixin
 from PyIRC.io.asyncio import IRCProtocol
@@ -6,15 +9,13 @@ from PyIRC.util.classutil import get_all_subclasses
 # NOTE: All modules that are valid in the extensions config value need to be
 # imported so they can be found by the get_all_subclasses method.
 
-# Helper extensions
-from .db import Database
-from .command import CommandMux
+# Helper extensions. These need to be imported here because they're a part of
+# core, but still need to find them with get_all_subclasses. They have noqa on
+# them because we don't actually use them in this file.
+from .db import Database         # noqa # pylint: disable=unused-import
+from .command import CommandMux  # noqa # pylint: disable=unused-import
 
 from . import plugins
-
-from config import args
-
-from pkgutil import iter_modules
 
 
 class SeabirdProtocol(IRCProtocol, PrettyPrintedIRCMixin):
@@ -44,14 +45,16 @@ class SeabirdProtocol(IRCProtocol, PrettyPrintedIRCMixin):
         # If the first param isn't the bot's nick, we should send it back to
         # the first param, as that will be the channel name.
         target = line.hostmask.nick
-        if not self.casecmp(self.basic_rfc.nick, line.params[0]):
+
+        basic_rfc = self.get_extension('BasicRFC')
+        if not self.casecmp(basic_rfc.nick, line.params[0]):
             target = line.params[0]
 
         self.send('PRIVMSG', [target, msg])
 
     def mention_reply(self, line, msg):
-        if not self.casecmp(self.basic_rfc.nick, line.params[0]):
+        basic_rfc = self.get_extension('BasicRFC')
+        if not self.casecmp(basic_rfc.nick, line.params[0]):
             msg = '%s: %s' % (line.hostmask.nick, msg)
 
         self.reply(line, msg)
-

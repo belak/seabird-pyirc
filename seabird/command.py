@@ -8,12 +8,11 @@ class SeabirdCommand(SeabirdMessage):
     def __init__(self, proto, prefix, line):
         super().__init__(proto, line)
 
-        self.cmd, _, self.remainder = self.trailing[len(prefix):].partition(' ')
+        # Split into 3 parts on the space, then unpack the tuple.
+        result = self.trailing[len(prefix):].partition(' ')
+        self.cmd, _, self.remainder = result
 
 
-# TODO: This is a temporary class which will just emit an sb.command event
-# for each event that comes in. This should be expanded to include support for
-# !help and other such conveniences.
 class CommandMux(BaseExtension):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
