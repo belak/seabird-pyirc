@@ -3,29 +3,26 @@ from PyIRC.signal import event
 
 import requests
 
-METAR_URL = 'http://weather.noaa.gov/pub/data/observations/metar/stations/' \
-    '{}.TXT'
+METAR_URL = 'http://weather.noaa.gov/pub/data/observations/metar/stations/{}.TXT'
 
 class MetarPlugin(BaseExtension):
     requires = ['CommandMux']
 
-    @event('seabird_command', 'metar')
+    @event('sb.command', 'metar')
     def get_metar(self, event, line, cmd, remainder):
         try:
             resp = requests.get(METAR_URL.format(remainder.upper()))
-        except:
-            self.base.mention_reply(line, 'Unable to get METAR for {}'.format(
-                remainder))
-            return
+            if resp.status_code == 404:
+                cmd.mention_reply('{} is not a valid METAR code'.format(cmd.remainder))
+                return
 
-        if resp.status_code != 200:
-            self.base.mention_reply(line, '{} is not a valid METAR code'.format(
-                remainder))
+            resp.raise_for_status()
+        except:
+            cmd.mention_reply('Unable to get METAR for {}'.format(cmd.remainder))
             return
 
         try:
             data = resp.text.split('\n')[1]
-            self.base.mention_reply(line, data)
+            cmd.mention_reply(data)
         except:
-            self.base.mention_reply(line, 'Malformed METAR data for {}'.format(
-                remainder))
+            cmd.mention_reply('Malformed METAR data for {}'.format(cmd.remainder))

@@ -19,9 +19,9 @@ class KarmaPlugin(BaseExtension):
 
     regex = re.compile('([^\s]+)(\+\+|--)(?:\s|$)')
 
-    @event('seabird_command', 'karma')
-    def karma(self, event, line, cmd, remainder):
-        normalized_item = remainder.lower()
+    @event('sb.command', 'karma')
+    def karma(self, event, cmd):
+        normalized_item = cmd.remainder.lower()
         with self.base.db_session() as session:
             score = Karma.score.default.arg
 
@@ -29,7 +29,7 @@ class KarmaPlugin(BaseExtension):
             if k:
                 score = k.score
 
-            self.reply(line, "%s's karma is %d" % (remainder, score))
+            cmd.reply("%s's karma is %d" % (remainder, score))
 
     @event('commands', 'PRIVMSG')
     def match_karma(self, event, line):

@@ -13,21 +13,19 @@ class WeatherPlugin(BaseExtension):
     def _kelvinToFahrenheit(self, temp):
         return 1.8 * (float(temp) - 273.15) + 32
 
-    @event('seabird_command', 'weather')
-    def get_weather(self, event, line, cmd, remainder):
+    @event('sb.command', 'weather')
+    def get_weather(self, event, cmd):
         try:
             resp = requests.get(WEATHER_URL, params={
-                'zip': '{},us'.format(remainder),
+                'zip': '{},us'.format(cmd.remainder),
                 'APPID': args['weather']['api_key'],
             })
         except:
-            self.base.mention_reply(line, 'Unable to get weather for {}'.format(
-                remainder))
+            cmd.mention_reply('Unable to get weather for {}'.format(cmd.remainder))
             return
 
         if resp.status_code != 200:
-            self.base.mention_reply(line, '{} is not a valid zipcode'.format(
-                remainder))
+            cmd.mention_reply('{} is not a valid zipcode'.format(cmd.remainder))
             return
 
         try:
@@ -41,7 +39,7 @@ class WeatherPlugin(BaseExtension):
                 # No description here
                 pass
 
-            self.base.mention_reply(line, '{}: {:.2f} with a high of {:.2f} '
+            cmd.mention_reply('{}: {:.2f} with a high of {:.2f} '
                 'and low of {:.2f}{}.'.format(
                     data['name'],
                     self._kelvinToFahrenheit(data['main']['temp']),
@@ -49,4 +47,4 @@ class WeatherPlugin(BaseExtension):
                     self._kelvinToFahrenheit(data['main']['temp_min']),
                     desc))
         except:
-            self.base.mention_reply(line, 'Got malformed weather response')
+            cmd.mention_reply('Got malformed weather response')
