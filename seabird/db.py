@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
@@ -6,8 +8,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.session import Session
 
 from PyIRC.extensions import BaseExtension
-
-from contextlib import contextmanager
 
 # This should be the base for all models in seabird, so migrations can be
 # auto-generated.
