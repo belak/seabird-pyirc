@@ -1,3 +1,4 @@
+import socket
 import subprocess
 
 from PyIRC.extensions import BaseExtension
@@ -18,8 +19,8 @@ class NetToolsPlugin(BaseExtension):
 
         try:
             answers = query(target, result_type)
-        except DNSException as e:
-            cmd.mention_reply(str(e))
+        except DNSException as exc:
+            cmd.mention_reply(str(exc))
         except AssertionError:
             cmd.mention_reply('No {} results for {}.'.format(
                 result_type, target,
