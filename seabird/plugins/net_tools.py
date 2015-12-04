@@ -8,29 +8,44 @@ from PyIRC.signal import event
 class NetToolsPlugin(BaseExtension):
     requires = ['CommandMux']
 
+    family_mapping = {
+        'A':    socket.AF_INET,
+        'AAAA': socket.AF_INET6,
+    }
+
     @event('sb.command', 'dig')
     def dig(self, _, cmd):
-        # Port doesn't matter
-        results = socket.getaddrinfo(cmd.remainder, 22)
-        ipv6 = set()
-        ipv4 = set()
-        for res in results:
-            family = res[0]
-            res_ip = res[4][0]
+        target, _, result_type = cmd.remainder.partition(' ')
+        if not result_type:
+            result_type = "A"
 
-            if family == socket.AF_INET:
-                ipv4.add(res_ip)
-            else:
-                ipv6.add(res_ip)
-        out = []
-        for addrs in [ipv6, ipv4]:
-            if addrs:
-                out.append(', '.join(addrs))
-        if out:
-            cmd.mention_reply('; '.join(out))
-        else:
+        if result_type not in self.family_mapping:
+            cmd.mention_reply('Address type %s not supported', result_type)
+            return
+
+        result_family = self.family_mapping[result_type]
+
+        results = {
+            socket.AF_INET:  set(),
+            socket.AF_INET6: set(),
+        }
+
+        # Port doesn't matter, so we just pick one.
+        addr_results = socket.getaddrinfo(target, 22)
+        for res in addr_results:
+            family = res[0]
+            if family not in results:
+                continue
+
+            res_ip = res[4][0]
+            results[family].add(res_ip)
+
+        if not results[result_family]:
             cmd.mention_reply('Unable to find results for {}'.format(
                 cmd.remainder))
+            return
+
+        cmd.mention_reply(', '.join(results[result_family]))
 
     @event('sb.command', 'rdns')
     def rdns(self, _, cmd):
