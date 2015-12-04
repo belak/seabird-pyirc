@@ -58,4 +58,4 @@ target/
 
 # Custom stuff
 *.db
-config.py
+/config.py
