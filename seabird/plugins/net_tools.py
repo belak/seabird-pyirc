@@ -1,20 +1,14 @@
-import socket
 import subprocess
 
 from PyIRC.extensions import BaseExtension
 from PyIRC.signal import event
 
-from dns.resolver import query, NXDOMAIN
+from dns.resolver import query
 from dns.exception import DNSException
 
 
 class NetToolsPlugin(BaseExtension):
     requires = ['CommandMux']
-
-    family_mapping = {
-        'A':    socket.AF_INET,
-        'AAAA': socket.AF_INET6,
-    }
 
     @event('sb.command', 'dig')
     def dig(self, _, cmd):
@@ -26,9 +20,12 @@ class NetToolsPlugin(BaseExtension):
             answers = query(target, result_type)
         except DNSException as e:
             cmd.mention_reply(str(e))
+        except AssertionError:
+            cmd.mention_reply('No {} results for {}.'.format(
+                result_type, target,
+            ))
         else:
             cmd.mention_reply(', '.join(str(answer) for answer in answers))
-
 
     @event('sb.command', 'rdns')
     def rdns(self, _, cmd):
