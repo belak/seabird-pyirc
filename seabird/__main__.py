@@ -1,13 +1,15 @@
 import asyncio
 
+from .config import SeabirdConfig
 from .protocol import SeabirdProtocol
-
-from config import args
 
 
 def main():
+    conf = SeabirdConfig()
+    conf.from_module('config')
+
     # Connect to the server
-    inst = SeabirdProtocol(**args)
+    inst = SeabirdProtocol(**conf)
     coro = inst.connect()
 
     # Get the event loop

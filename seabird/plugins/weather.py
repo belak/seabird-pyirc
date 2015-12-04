@@ -3,8 +3,6 @@ from PyIRC.signal import event
 
 import requests
 
-from config import args
-
 WEATHER_URL = 'http://api.openweathermap.org/data/2.5/weather'
 
 
@@ -15,12 +13,16 @@ def kelvin_to_fahrenheit(temp):
 class WeatherPlugin(BaseExtension):
     requires = ['CommandMux']
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.api_key = kwargs['weather_api_key']
+
     @event('sb.command', 'weather')
     def get_weather(self, _, cmd):
         try:
             resp = requests.get(WEATHER_URL, params={
                 'zip': '{},us'.format(cmd.remainder),
-                'APPID': args['weather']['api_key'],
+                'APPID': self.api_key,
             })
 
             resp.raise_for_status()

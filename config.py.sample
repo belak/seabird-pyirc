@@ -1,13 +1,9 @@
-args = {
-    'serverport': ('chat.freenode.net', 6697),
-    'ssl': True,
-    'username': 'herbert',
-    'nick': 'i-am-a-bot',
-    'gecos': 'Test Bot',
-    'sasl_username': 'herbert-bot',
-    'sasl_password': 'asdasdasdasd',
-    'join': ['#botters-test-junk'],
-    'weather': {
-        'api_key': 'my-awesome-api-key',
-    },
-}
+SERVERPORT = ('chat.freenode.net', 6697)
+SSL = True
+USERNAME = 'herbert'
+NICK = 'i-am-a-bot'
+GECOS = 'Test Bot'
+SASL_USERNAME = 'herbert-bot'
+SASL_PASSWORD = 'asdasdasdasd'
+JOIN = ['#botters-test-junk']
+WEATHER_API_KEY = 'my-awesome-api-key'

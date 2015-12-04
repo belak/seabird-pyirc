@@ -1,8 +1,8 @@
-from PyIRC.extensions import BaseExtension
-from PyIRC.signal import event
-
 import socket
 import subprocess
+
+from PyIRC.extensions import BaseExtension
+from PyIRC.signal import event
 
 
 class NetToolsPlugin(BaseExtension):
