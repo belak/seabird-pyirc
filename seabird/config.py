@@ -7,3 +7,17 @@ class SeabirdConfig(dict):
                 continue
 
             self[k.lower()] = getattr(module, k)
+
+    @property
+    def networks(self):
+        networks = self.get('networks')
+        if networks is None:
+            return [self]
+
+        ret = []
+        for network in networks:
+            conf = self.copy()
+            conf.update(network)
+            ret.append(conf)
+
+        return ret

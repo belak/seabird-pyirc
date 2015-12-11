@@ -8,15 +8,15 @@ def main():
     conf = SeabirdConfig()
     conf.from_module('config')
 
-    # Connect to the server
-    inst = SeabirdProtocol(**conf)
-    coro = inst.connect()
-
     # Get the event loop
     loop = asyncio.get_event_loop()
 
+    for network_config in conf.networks:
+        inst = SeabirdProtocol(**network_config)
+        coro = inst.connect()
+        loop.run_until_complete(coro)
+
     # Run the event loop
-    loop.run_until_complete(coro)
     loop.run_forever()
     loop.close()
 
