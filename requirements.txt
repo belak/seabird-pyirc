@@ -1,5 +1,5 @@
 # IRC
--e git+https://code.foxkit.us/IRC/PyIRC.git#egg=PyIRC
+git+https://code.foxkit.us/IRC/PyIRC.git#egg=PyIRC
 
 # SQL related
 alembic==0.8.3
