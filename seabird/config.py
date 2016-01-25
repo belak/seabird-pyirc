@@ -3,7 +3,7 @@ class SeabirdConfig(dict):
         module = __import__(module_name)
 
         for k in dir(module):
-            if not k.upper():
+            if not k.isupper():
                 continue
 
             self[k.lower()] = getattr(module, k)
