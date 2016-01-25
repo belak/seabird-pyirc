@@ -4,33 +4,29 @@ import subprocess
 from PyIRC.extensions import BaseExtension
 from PyIRC.signal import event
 
+from dns.resolver import query
+from dns.exception import DNSException
+
 
 class NetToolsPlugin(BaseExtension):
     requires = ['CommandMux']
 
     @event('sb.command', 'dig')
     def dig(self, _, cmd):
-        # Port doesn't matter
-        results = socket.getaddrinfo(cmd.remainder, 22)
-        ipv6 = set()
-        ipv4 = set()
-        for res in results:
-            family = res[0]
-            res_ip = res[4][0]
+        target, _, result_type = cmd.remainder.partition(' ')
+        if not result_type:
+            result_type = "AAAA"
 
-            if family == socket.AF_INET:
-                ipv4.add(res_ip)
-            else:
-                ipv6.add(res_ip)
-        out = []
-        for addrs in [ipv6, ipv4]:
-            if addrs:
-                out.append(', '.join(addrs))
-        if out:
-            cmd.mention_reply('; '.join(out))
+        try:
+            answers = query(target, result_type)
+        except DNSException as exc:
+            cmd.mention_reply(str(exc))
+        except AssertionError:
+            cmd.mention_reply('No {} results for {}.'.format(
+                result_type, target,
+            ))
         else:
-            cmd.mention_reply('Unable to find results for {}'.format(
-                cmd.remainder))
+            cmd.mention_reply(', '.join(str(answer) for answer in answers))
 
     @event('sb.command', 'rdns')
     def rdns(self, _, cmd):

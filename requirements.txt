@@ -6,3 +6,6 @@ alembic==0.8.3
 SQLAlchemy==1.0.9
 
 requests==2.8.1
+
+# net_tools
+git+https://github.com/rthalley/dnspython@python3
