@@ -1,7 +1,10 @@
+import asyncio
+from json import JSONDecodeError
+
+import aiohttp
+
 from PyIRC.extensions import BaseExtension
 from PyIRC.signal import event
-
-import requests
 
 WEATHER_URL = 'http://api.openweathermap.org/data/2.5/weather'
 
@@ -19,14 +22,16 @@ class WeatherPlugin(BaseExtension):
 
     @event('sb.command', 'weather')
     def get_weather(self, _, cmd):
-        try:
-            resp = requests.get(WEATHER_URL, params={
-                'zip': '{},us'.format(cmd.remainder),
-                'APPID': self.api_key,
-            })
+        loop = asyncio.get_event_loop()
+        loop.create_task(self.weather_callback(cmd))
 
-            resp.raise_for_status()
-        except requests.RequestException:
+    async def weather_callback(self, cmd):
+        resp = await aiohttp.get(WEATHER_URL, params={
+            'zip': '{},us'.format(cmd.remainder),
+            'APPID': self.api_key,
+        })
+
+        if resp.status != 200:
             cmd.mention_reply('Unable to get weather for {}'.format(
                 cmd.remainder))
             return
@@ -55,5 +60,5 @@ class WeatherPlugin(BaseExtension):
             cmd.mention_reply('{name}: {temp:.2f} with a high of '
                               '{temp_max:.2f} and low of '
                               '{temp_min:.2f}{desc}.'.format(**format_args))
-        except ValueError:
+        except (ValueError, JSONDecodeError):
             cmd.mention_reply('Got malformed weather response')
